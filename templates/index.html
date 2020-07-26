@@ -1,0 +1,82 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Flack App
+{% endblock %}
+
+{% block body %}
+
+<div class="container" style="background-color:rgb(0, 153, 255); width:40%; border-radius: 30px; margin-top: 15px; margin-bottom: 15 px; box-shadow: 0px 0px 10px rgb(131, 131, 131, 0.5);">
+    <h1 class="text-center" style="font-size:18pt; padding-top:10px; padding-bottom:15px"> 
+        <img style="float:left; width:35px; height:35px;" src= {{ url_for('static', filename = 'Speech Bubble Emoji.png') }}>
+        <span id="username" style="color:white"></span> <!-- inserts input of username -->
+    </h1>
+    <script type="text/javascript">showUsername();</script> <!-- runs function to insert the input of username --> 
+</div>
+<div class="container">
+    <div class="row" style="min-height:400px;">
+        <div class="col">
+        </div>
+        <div class="col-3" style="background-color:rgb(240, 240, 240, 0.1); border-radius: 30px; margin-top: 15px; margin-bottom: 15 px; margin-right:15px; box-shadow: 0px 0px 10px rgb(131, 131, 131, 0.5);">          
+            <div class="chat_header">
+                <h2 id="h2chats" class="text-center" style="font-size:18pt; padding-top:10px; padding-bottom:15px; border-bottom-style:solid; border-bottom-width:3px; border-bottom-color:rgb(0, 153, 255);">Chats</h2>
+                    <input id="chatname" autocomplete="off" autofocus placeholder="New Chat" type="text"> <!-- field to insert chatname input -->
+                    <button id="createchat" class="btn btn-primary" type="submit" style="margin-top:5px;">New Chat</button> <!-- button to release an event when someone clicks on it -->
+            </div>
+
+            <ul id="chats" style="margin-top:10px;"> <!-- create a list with all the chats in chatnames dict -->
+                {% for chat in chatnames %}
+                    <li><a href="{{ url_for('chat', chatname=chat) }}">{{ chatnames[chat] }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="col-5" style="background-color:rgba(240, 240, 240, 0.1); border-radius: 30px; margin-top: 15px; margin-bottom: 15 px; box-shadow: 0px 0px 10px rgba(131, 131, 131, 0.5);">
+            <div class="chat_header">
+                {% if chatname %}
+                    <h2 id="h2chatheader" class="text-center" style="font-size:18pt; padding-top:10px; padding-bottom:15px; border-bottom-style:solid; border-bottom-width:3px; border-bottom-color:rgb(0, 153, 255);"> 
+                    Chat: <span id="chatnameflask">{{chatname}}</span><h2>
+                    <script type="text/javascript">storeChatname(); </script> <!-- runs function that selects element of chatnameflask id and localstorages it -->
+                {% else %}
+                    <h2 id="h2chatheader" class="text-center" style="font-size:18pt; padding-top:10px; padding-bottom:15px; border-bottom-style:solid; border-bottom-width:3px; border-bottom-color:rgb(0, 153, 255);">
+                    Chat: <span id="chatnamejs"></span></h2>
+                    <script type="text/javascript">showChatname(); showMessages();</script> <!-- runs function that places chatname on the element with id chatnamejs AND function to place messages on the screen -->
+                {% endif %}
+            </div>
+            <div class="show_chat">
+                <ul id="messages"> <!-- creates list of all messages in chatname key of chatsfull dict -->
+                    {% if chatname in chatsfull.keys() %}
+                        {% for message in chatsfull[chatname] %}
+                            <li id="messagelist" style="color:{{ message.split('::')[1] }};">{{ message.split('::')[0] }}</li>
+                        {% endfor %}
+                    {% endif %}
+                </ul>
+            </div>
+            <div id="insert_m" style="position:fixed; bottom:10%; background-color:rgb(0, 153, 255); border-radius: 30px; margin-left:50px; padding-left:30px; padding-right:30px; padding-top:10px; padding-bottom:40 px; box-shadow: 0px 0px 10px rgb(131, 131, 131, 0.5);">
+                <input id="message" autocomplete="off" autofocus placeholder="New Message" type="text" style="margin-bottom:10px;">
+                <button id="newmessage" type="submit" style="margin-bottom:10px; margin-left:10px" class="btn btn-light">Send</button> <!-- button to release an event when someone clicks on it to get the input of element with id message -->
+                <input hidden id="colorsel" type="color" value="#0099ff" placeholder="Select color" >
+            </div>
+        </div>
+        <div class="col">
+            <div class="btn-group" role="group" aria-label="Basic example" style="margin-top:15px;">
+                <button id="lightmode" type="button" class="btn btn-primary" onclick="lightMode()">Light</button>
+                <button id="darkmode" type="button" class="btn btn-primary" onclick="darkMode()">Dark</button>
+                <script>
+                    function darkMode() {
+                      document.getElementById("bodycolor").style.backgroundColor = "black";
+                      document.getElementById("h2chats").style.color = "white";
+                      document.getElementById("h2chatheader").style.color = "white";
+                    }
+                    function lightMode() {
+                      document.getElementById("bodycolor").style.backgroundColor = "white";
+                      document.getElementById("h2chats").style.color = "black";
+                      document.getElementById("h2chatheader").style.color = "black";
+                    }
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
