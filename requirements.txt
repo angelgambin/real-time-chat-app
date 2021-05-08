@@ -1,5 +1,5 @@
 Flask==1.0.2
 Flask-SocketIO==3.1.2
-eventlet==0.24.1
+eventlet==0.31.0
 greenlet==0.4.15
 Werkzeug==0.14.1
